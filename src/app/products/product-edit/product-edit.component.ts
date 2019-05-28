@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { MessageService } from '../../messages/message.service';
 
-import { Product } from '../product';
+import { Product, ProductResolved } from '../product';
 import { ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -22,11 +22,13 @@ export class ProductEditComponent implements OnInit{
               private router: Router) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(
-      params => {
-        const id = +params.get('id'); // '+' symbol is to cast it to a number
-        this.getProduct(id);
-      });
+    //We use the route service that provides a 'data' observable to monitor the changes in the URL so every time this URL changes, 
+    //for example to access the addProduct page, we can detect it. 
+    this.route.data.subscribe(data => {
+      const resolvedData: ProductResolved = data['resolvedData'];
+      this.errorMessage = resolvedData.error;
+      this.onProductRetrieved(resolvedData.product);
+    });
   }
 
   getProduct(id: number): void {
