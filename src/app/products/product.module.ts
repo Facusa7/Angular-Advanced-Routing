@@ -9,37 +9,46 @@ import { RouterModule } from '@angular/router';
 import { ProductResolver } from './product-resolver.service';
 import { ProductEditInfoComponent } from './product-edit/product-edit-info.component';
 import { ProductEditTagsComponent } from './product-edit/product-edit-tags.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   imports: [
     SharedModule,
     RouterModule.forChild([
-      { path: 'products', component: ProductListComponent },
       { 
-        path: 'products/:id', 
-        component: ProductDetailComponent, 
-        resolve: { resolvedData: ProductResolver } 
-      },
-      { 
-        path: 'products/:id/edit', 
-        component: ProductEditComponent, 
-        resolve: { resolvedData: ProductResolver },
+        path: 'products', //Component-less route to make sure the router-outlet can be used for either the parent or another child route.
         children:[
           {
             path: '',
-            redirectTo: 'info',
-            pathMatch: 'full'
+            component: ProductListComponent
           },
-          {
-            path: 'info',
-            component: ProductEditInfoComponent
+          { 
+            path: ':id', 
+            component: ProductDetailComponent, 
+            resolve: { resolvedData: ProductResolver } 
           },
-          {
-            path: 'tags',
-            component: ProductEditTagsComponent
+          { 
+            path: ':id/edit', 
+            component: ProductEditComponent, 
+            resolve: { resolvedData: ProductResolver },
+            children:[
+              {
+                path: '',
+                redirectTo: 'info',
+                pathMatch: 'full'
+              },
+              {
+                path: 'info',
+                component: ProductEditInfoComponent
+              },
+              {
+                path: 'tags',
+                component: ProductEditTagsComponent
+              }
+            ] 
           }
-        ] 
-      }
+        ]
+       },
     ])
   ],
   declarations: [
