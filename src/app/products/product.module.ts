@@ -10,6 +10,9 @@ import { ProductResolver } from './product-resolver.service';
 import { ProductEditInfoComponent } from './product-edit/product-edit-info.component';
 import { ProductEditTagsComponent } from './product-edit/product-edit-tags.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { AuthGuard } from '../user/auth.guard';
+import { ProductData } from './product-data';
+import { ProductEditGuard } from './product-edit/product-edit.guard';
 
 @NgModule({
   imports: [
@@ -17,6 +20,7 @@ import { BrowserModule } from '@angular/platform-browser';
     RouterModule.forChild([
       { 
         path: 'products', //Component-less route to make sure the router-outlet can be used for either the parent or another child route.
+        canActivate:[AuthGuard],
         children:[
           {
             path: '',
@@ -30,6 +34,7 @@ import { BrowserModule } from '@angular/platform-browser';
           { 
             path: ':id/edit', 
             component: ProductEditComponent, 
+            canDeactivate: [ProductEditGuard],
             resolve: { resolvedData: ProductResolver },
             children:[
               {

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { AuthService } from './user/auth.service';
 import { Router, Event, NavigationStart, NavigationCancel, NavigationEnd, NavigationError } from '@angular/router';
 import { slideInAnimation } from './app.animation';
+import { MessageService } from './messages/message.service';
 
 @Component({
   selector: 'pm-root',
@@ -24,9 +25,14 @@ export class AppComponent {
     }
     return '';
   }
+  //We have to create getter for private properties, so the template can access them. 
+  get isMessageDisplayed(): boolean {
+    return this.messageService.isDisplayed;
+  }
 
   constructor(private authService: AuthService,
-              private router: Router) { 
+              private router: Router,
+              private messageService: MessageService) { 
       router.events.subscribe((routerEvent : Event) => {
         this.checkRouterEvent(routerEvent);
       });
@@ -49,5 +55,18 @@ export class AppComponent {
     this.authService.logout();
     console.log('Log out');
     this.router.navigateByUrl('/welcome'); //We use navigate by url in order to make sure that all url parameters are removed when the users logs out.
+  }
+
+  displayMessages(): void {
+    // Example of primary and secondary routing together
+    // this.router.navigate(['/login', {outlets: { popup: ['messages']}}]); // Does not work
+    // this.router.navigate([{outlets: { primary: ['login'], popup: ['messages']}}]); // Works
+    this.router.navigate([{ outlets: { popup: ['messages'] } }]); // Works
+    this.messageService.isDisplayed = true;
+  }
+
+  hideMessages(): void {
+    this.router.navigate([{ outlets: { popup: null } }]);
+    this.messageService.isDisplayed = false;
   }
 }
