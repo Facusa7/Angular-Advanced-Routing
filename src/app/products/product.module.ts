@@ -18,10 +18,6 @@ import { ProductEditGuard } from './product-edit/product-edit.guard';
   imports: [
     SharedModule,
     RouterModule.forChild([
-      { 
-        path: 'products', //Component-less route to make sure the router-outlet can be used for either the parent or another child route.
-        canActivate:[AuthGuard],
-        children:[
           {
             path: '',
             component: ProductListComponent
@@ -52,10 +48,7 @@ import { ProductEditGuard } from './product-edit/product-edit.guard';
               }
             ] 
           }
-        ]
-       },
-    ])
-  ],
+        ])],
   declarations: [
     ProductListComponent,
     ProductDetailComponent,
